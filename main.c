@@ -26,6 +26,7 @@ int main(int argc, char const *argv[])
 	printMtx(data, &param);
 	calculating(data, &param);
 	printMtx(data, &param);
+	freeMem(data, &param);
 	return ERRNO;
 }
 
@@ -54,8 +55,8 @@ void initMtx(double **data, initParam* param)
 		for(int n = param->nodes-1; n >= 0; n--)
 		{
 			data[l][n] = 0.0;
-			if(n == param->nodes-1) data[l][n] = param->initTemp;
 			if(l == 0 || n == 0) data[l][n] = param->averTemp;
+			if(n == param->nodes-1) data[l][n] = param->initTemp;
 		}
 	}
 }
@@ -91,4 +92,11 @@ void printParam(initParam param)
 	printf("timeStep = %.3f\n", param.timeStep);
 	printf("nodes = %d\n", param.nodes);
 	printf("layers = %d\n\n", param.layers);
+}
+
+void freeMem(double** data, initParam *param)
+{
+	for(int l = 0; l < param->layers; l++)
+		free(data[l]);
+	free(data);
 }

@@ -21,6 +21,7 @@ void 	printParam(initParam);
 void 	initMtx(double**, initParam*);
 void 	printMtx(double**, initParam*);
 void	calculating(double**, initParam*);
+void	freeMem(double**, initParam*);
 /*errcode*/
 #define ERRNO      0
 #define ERRFEWARG -1
