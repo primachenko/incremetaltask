@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
 	double **data = NULL;
 	data = (double**)malloc(param.layers*sizeof(double*));
 	if (!data) return ERRMEMALL;
-	for(int i = 0; i <= param.nodes; i++)
+	for(int i = 0; i <= param.layers; i++)
 	{
 		data[i] = (double*)malloc(param.nodes*sizeof(double));
 		if (!data[i]) return ERRMEMALL;
@@ -50,7 +50,7 @@ int initParamStruct(initParam *param, char const *argv[], int argc)
 
 void initMtx(double **data, initParam* param)
 {
-	for(int l = param->layers-1; l >= 0 ; l--)
+	for(int l = param->layers; l >= 0 ; l--)
 	{
 		for(int n = param->nodes-1; n >= 0; n--)
 		{
@@ -63,35 +63,37 @@ void initMtx(double **data, initParam* param)
 
 void calculating(double **data, initParam *param)
 {
-	printf("\n\ncalculating..\n");
+	printf("\n\ncalculating..\n\n");
 	double multiplier;
 	multiplier = (K * param->timeStep)/(C * param->lineStep * param->lineStep);
-	for(int l = 1; l < param->layers; l++)
+	for(int l = 1; l <= param->layers; l++)
 		for(int n = 1; n < param->nodes-1; n++)
 			data[l][n] = data[l-1][n] + multiplier * (data[l-1][n+1] - 2 * data[l-1][n] + data[l-1][n-1]);
 }
 
 void printMtx(double **data, initParam* param)
 {
-	for(int l = param->layers-1; l >= 0 ; l--)
+	for(int i = param->nodes-1; i >= 0; i--)
+		printf("n = %-3d\t", i);
+	printf("\n-------------------------------------------------------------------------\n");
+	for(int l = param->layers; l >= 0 ; l--)
 	{
-		printf("\n");
 		for(int n = param->nodes-1; n >= 0; n--)
-			printf("%6.3f\t", data[l][n]);
+			printf("%5.3f\t", data[l][n]);
+		printf("| t = %2.1f\n", l * param->timeStep);
 	}
-	printf("\n");
 }
 
 void printParam(initParam param)
 {
-	printf("targetTime = %.3f\n", param.targetTime);
-	printf("length = %.3f\n", param.length);
-	printf("initTemp = %.3f\n", param.initTemp);
-	printf("averTemp = %.3f\n", param.averTemp);
-	printf("lineStep = %.3f\n", param.lineStep);
-	printf("timeStep = %.3f\n", param.timeStep);
-	printf("nodes = %d\n", param.nodes);
-	printf("layers = %d\n\n", param.layers);
+	printf("targetTime = \t%.2f\n", param.targetTime);
+	printf("length = \t%.2f\n", param.length);
+	printf("initTemp = \t%.2f\n", param.initTemp);
+	printf("averTemp = \t%.2f\n", param.averTemp);
+	printf("lineStep = \t%.2f\n", param.lineStep);
+	printf("timeStep = \t%.2f\n", param.timeStep);
+	printf("nodes = \t%d\n", param.nodes);
+	printf("layers = \t%d\n\n", param.layers);
 }
 
 void freeMem(double** data, initParam *param)
